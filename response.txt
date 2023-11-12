@@ -1,0 +1,17 @@
+com: Z1 Ave Magnolia, Bayamon, PR, 00956
+city available: 6912 Rio Tejo Way, Elk Grove, CA, 95757
+
+address: 403 F St, Isleton, CA, 95641 (from airtable data)
+response: Residential Not Available (resideny field not found)
+
+address: C Berry Dr, Mountain View, CA, 94043
+response: Smarty county is not available in Airtable county
+
+address: 1428 Hesket Way, Sacramento, CA, 95825
+response: Municipality Un-incorporated and - in airtable_cities
+
+address: 111 Oak Ave, Galt, CA, 95632
+response: Municipality Matche Found but municipal_name(city) not in airtable_cities!
+
+address: 1168 49th St, Sacramento, CA, 95819
+response: Municipality Matche Found and municipal_name(city) in airtable_cities

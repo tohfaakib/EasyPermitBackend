@@ -1,0 +1,36 @@
+{
+    "usgeocoder":{
+        "request_status":{
+            "request_address":"('6912 Rio Tejo Way', 'Elk Grove', 'CA'), 95757",
+            "request_status_code":{
+                "flags":"",
+                "value":"ZipMatch"
+            },
+            "request_status_code_description":{
+                "census":"no",
+                "usps":"no",
+                "parcel":"unavailable",
+                "value":"Zip code was found but street address was not found"
+            },
+            "request_status_version":"16.1023"
+        },
+        "address_info":{
+            "address_status":"Match Found",
+            "street":"(No Match for Input Street Address)",
+            "city":"Elk Grove",
+            "county":"Sacramento",
+            "state":"CA",
+            "zip5":"95757"
+        },
+        "zipcode_carrierroute":{
+            "zip9":{
+                "zip9_status":"No Match"
+            }
+        },
+        "jurisdictions_info":{
+            "municipal":{
+                "municipal_status":"Un-incorporated"
+            }
+        }
+    }
+}

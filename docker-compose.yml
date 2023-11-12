@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  easypermit-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: easypermit-backend
+    container_name: easypermit-backend
+    # command: uvicorn main:app --reload
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    env_file:
+      - ./.env

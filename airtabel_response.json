@@ -1,0 +1,61 @@
+[
+    {
+        "id": "recQSwMmEvGvyXNOu", 
+        "createdTime": "2023-10-20T20:32:14.000Z", 
+        "fields": {
+            "ETrakit, Accela, On-Line Permitting or Other?": "Other", 
+            "City": "Galt", 
+            "Allowed?": "True", 
+            "Permit Login Page or Permit Tracking System ": "https://www.cityofgalt.org/government/community-development/building", 
+            "State": "CA", 
+            "City/Town Website": "https://www.cityofgalt.org/", 
+            "County": "Sacramento", 
+            "Example Address": "111 Oak Ave, Galt, CA 95632", 
+            "City + County": "Galt, Sacramento County"
+        }
+    }, 
+    {
+        "id": "recYy1MSukEeoBhGK", 
+        "createdTime": "2023-10-20T20:32:14.000Z", 
+        "fields": {
+            "ETrakit, Accela, On-Line Permitting or Other?": "Accela", 
+            "City": "-", 
+            "Allowed?": "True", 
+            "Permit Login Page or Permit Tracking System ": "https://building.saccounty.gov/Pages/default.aspx", 
+            "State": "CA", 
+            "City/Town Website": "https://www.saccounty.gov/Pages/default.aspx", 
+            "County": "Sacramento", 
+            "Example Address": "1428 Hesket Wy, Sacramento, CA 95825", 
+            "City + County": "Un-incorporated Sacramento"
+        }
+    }, 
+    {
+        "id": "recgva11CplstVEov", 
+        "createdTime": "2023-10-20T20:32:14.000Z", 
+        "fields": {
+            "ETrakit, Accela, On-Line Permitting or Other?": "Other", 
+            "City": "Isleton", 
+            "Allowed?": "True", 
+            "Permit Login Page or Permit Tracking System ": "https://cityofisleton.com/departments/building-department/", 
+            "State": "CA", 
+            "City/Town Website": "https://cityofisleton.com/", 
+            "County": "Sacramento", 
+            "Example Address": "403 F St, Isleton, CA 95632", 
+            "City + County": "Isleton, Sacramento County"
+        }
+    }, 
+    {
+        "id": "recuTvSSXywdyCIcA", "createdTime": "2023-10-20T20:32:14.000Z", 
+        "fields": {
+            "ETrakit, Accela, On-Line Permitting or Other?": "Accela", 
+            "City": "Sacramento", 
+            "Allowed?": "True", 
+            "Permit Login Page or Permit Tracking System ": "http://www.cityofsacramento.org/Community-Development/Building", 
+            "State": "CA", 
+            "City/Town Website": "https://www.cityofsacramento.gov/", 
+            "County": "Sacramento", 
+            "Example Address": "1168 49th St, Sacramento, CA 95819", 
+            "City + County": "Sacramento, Sacramento County"
+        }
+    }
+]
