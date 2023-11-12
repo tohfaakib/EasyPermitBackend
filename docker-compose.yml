@@ -8,8 +8,8 @@ services:
     container_name: easypermit-backend
     # command: uvicorn main:app --reload
     ports:
-      - "8000:8000"
+      - "9000:9000"
     expose:
-      - 8000
+      - 9000
     env_file:
       - ./.env
