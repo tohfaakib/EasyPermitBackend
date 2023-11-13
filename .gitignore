@@ -109,3 +109,4 @@ dist
 #output
 build
 .env
+__pycache__
