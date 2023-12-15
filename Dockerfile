@@ -7,7 +7,7 @@ WORKDIR /home/app
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWEITEBYTECODE 1
 
-RUN apt-get update && apt-get upgrade
+# RUN apt-get update && apt-get upgrade
 
 COPY ./requirements.txt .
 RUN pip install --upgrade pip
