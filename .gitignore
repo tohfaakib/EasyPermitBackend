@@ -110,3 +110,5 @@ dist
 build
 .env
 __pycache__
+__pycache__
+venv
