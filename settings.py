@@ -9,6 +9,8 @@ class AppSettings(BaseSettings):
     AIRTABLE_TABLE_ID: str
     AIRTABLE_VIEW_ID: str
     GEOCODER_AUTH_KEY: str
+    PROPERTY_MELISSADATA_ID: str
+    ADDRESS_MELISSADATA_ID: str
 
     class Config:
         env_file = '.env'
