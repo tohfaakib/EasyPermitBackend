@@ -17,7 +17,7 @@ def get_usgeocoder_data(smartyAutoAddress):
     }
     us_geocoder_response = requests.get(url, params=params)
     us_geocoder_data = json.loads(us_geocoder_response.text.lstrip('\ufeff'))
-    print("Usgeocoder_Data: ", us_geocoder_data)
+    # print("Usgeocoder_Data: ", us_geocoder_data)
     return us_geocoder_data
 
 def get_melissa_property_data(address):
@@ -29,7 +29,7 @@ def get_melissa_property_data(address):
     }
     response = requests.get(url, params=params)
     melisssa_data = json.loads(response.text.lstrip('\ufeff'))
-    print("Melissa_Property_Data: ", melisssa_data)
+    # print("Melissa_Property_Data: ", melisssa_data)
     return melisssa_data
 
 def get_melissa_address_data(address, city, state):
@@ -44,7 +44,7 @@ def get_melissa_address_data(address, city, state):
     }
     response = requests.get(url, params=params)
     address_data = json.loads(response.text.lstrip('\ufeff'))
-    print("Melissa_Address_Data: ", address_data)
+    # print("Melissa_Address_Data: ", address_data)
     return address_data
 
 def get_corresponding_value(zipcode):
@@ -70,28 +70,35 @@ def get_corresponding_value(zipcode):
             return value_cell
 
 
-def save_property_details(smartyAutoAddress):
+def property_details(smartyAutoAddress):
     smarty_street = smartyAutoAddress['street_line']
     smarty_city = smartyAutoAddress['city']
     smarty_zipcode = smartyAutoAddress['zipcode']
     smarty_state = smartyAutoAddress['state']
-    print(smarty_street, smarty_city, smarty_zipcode, smarty_state)
+    # print(smarty_street, smarty_city, smarty_state, smarty_zipcode)
 
     try:
-        us_geocoder_data = get_usgeocoder_data(smartyAutoAddress)
+        # us_geocoder_data = get_usgeocoder_data(smartyAutoAddress)
         property_data = get_melissa_property_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}')
-        address_data = get_melissa_address_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}', smarty_city, smarty_state)
+        # address_data = get_melissa_address_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}', smarty_city, smarty_state)
         cliemate_zone = get_corresponding_value(smarty_zipcode)
 
-        all_data = {
-            "usgeocoder": us_geocoder_data,
-            "property_melissa": property_data,
-            "address_melissa": address_data,
-            "cliemate_zone": cliemate_zone,
+        data = {
+            "climate_zone": cliemate_zone,
+            "full_street_address": f'{smarty_street}, {smarty_city}, {smarty_state}, {smarty_zipcode}',
+            "unit": 'unit',
+            "apn": property_data['Records'][0]['Parcel']['UnformattedAPN'],
+            "owner": property_data['Records'][0]['PrimaryOwner']['Name1Full'],
+            "year_built": property_data['Records'][0]['PropertyUseInfo']['YearBuilt'],
+            "square_feet": property_data['Records'][0]['PropertySize']['AreaBuilding'],
+            "lot_size": property_data['Records'][0]['PropertySize']['AreaLotSF'],
+            "bedrooms": property_data['Records'][0]['IntRoomInfo']['BedroomsCount'],
+            "total_rooms": property_data['Records'][0]['IntRoomInfo']['RoomsCount'],
         }
-        print("all:", all_data)
 
-        return all_data
+        print("all:", data)
+
+        return data
     except Exception as e:
         print(e)
 
@@ -216,18 +223,25 @@ def smarty_residency_county(smartyAutoAddress):
 def validate_address(smartyAutoAddress):
     if smartyAutoAddress['state'] == 'CA':
         rc = smarty_residency_county(smartyAutoAddress)
-        save_property_details(smartyAutoAddress)
+        property_data = property_details(smartyAutoAddress)
 
-        if rc['residency'] == 'Residential':
-            county_response = airtable_county_check(smartyAutoAddress, rc['county'])
-            return county_response
-        response = {
+        # if rc['residency'] == 'Residential':
+        #     county_response = airtable_county_check(smartyAutoAddress, rc['county'])
+        #     return county_response
+        # response = {
+        #     'data': {
+        #         'message': "Address is  not residential.",
+        #         'success': False
+        #     },
+        # }
+        # return response
+        return  {
             'data': {
+                'data': property_data,
                 'message': "Address is  not residential.",
-                'success': False
+                'success': True
             },
         }
-        return response
     else:
         response = {
             'data': {
