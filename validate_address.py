@@ -251,13 +251,56 @@ def validate_address(smartyAutoAddress):
         }
         return response
 
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+
+# Replace placeholders with actual MongoDB Atlas credentials
+username = "easy-permit-user"
+password = "INCMhpgYDO9PQh4i"
+cluster_url = "easy-permit-db.9yxt1px.mongodb.net"
+database_name = "easy-permit-db"
+
+# Connection to MongoDB Atlas
+client = MongoClient(f"mongodb+srv://{username}:{password}@{cluster_url}/{database_name}?retryWrites=true&w=majority")
+db = client[database_name]
+
 
 def save_property(property):
     print("Property save: ", property)
-    response = {
+    try:
+        property_data = {
+            "climate_zone": property['climate_zone'],
+            "full_street_address": property['full_street_address'],
+            "unit": property['unit'],
+            "apn": property['apn'],
+            "owner": property['owner'],
+            "year_built": property['year_built'],
+            "square_feet": property['square_feet'],
+            "lot_size": property['lot_size'],
+            "bedrooms": property['bedrooms'],
+            "total_rooms": property['total_rooms'],
+            "project_extent": property['project_extent'],
+            "construction_worker": property['construction_worker'],
+        }
+
+        result = db.items.insert_one(property_data)
+        response = {
             'data': {
+                "id": str(result.inserted_id),
                 'message': "Property Date save",
                 'success': True
             },
         }
-    return response
+        return response
+    except ConnectionFailure as e:
+        print("Error: ", e)
+        response = {
+            'data': {
+                "id": 'None',
+                'message': "Property Date save Error",
+                'success': False
+            },
+        }
+        return response
+
+    
