@@ -251,3 +251,13 @@ def validate_address(smartyAutoAddress):
         }
         return response
 
+
+def save_property(property):
+    print("Property save: ", property)
+    response = {
+            'data': {
+                'message': "Property Date save",
+                'success': True
+            },
+        }
+    return response

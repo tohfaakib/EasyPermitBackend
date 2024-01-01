@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Path
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-from validate_address import validate_address
-from models import SmartyAutoAddress
+from validate_address import validate_address, save_property
+from models import SmartyAutoAddress, Property
 
 app = FastAPI()
 
@@ -33,3 +33,7 @@ def index():
 @app.post("/api/get-permit-validation")
 def get_permit_validation(smartyAutoAddress: SmartyAutoAddress):
     return validate_address(smartyAutoAddress.model_dump())
+
+@app.post("/api/property-save")
+def property(property: Property):
+    return save_property(property.model_dump())
