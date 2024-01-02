@@ -223,9 +223,16 @@ def smarty_residency_county(smartyAutoAddress):
 def validate_address(smartyAutoAddress):
     if smartyAutoAddress['state'] == 'CA':
         rc = smarty_residency_county(smartyAutoAddress)
+        smarty_street = smartyAutoAddress['street_line']
+        smarty_city = smartyAutoAddress['city']
+        smarty_zipcode = smartyAutoAddress['zipcode']
+        smarty_state = smartyAutoAddress['state']
+        
+        # property_data = get_melissa_property_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}')
+        # room_count = int(property_data['Records'][0]['IntRoomInfo']['BathCount']) + int(property_data['Records'][0]['IntRoomInfo']['BedroomsCount']) + int(property_data['Records'][0]['IntRoomInfo']['RoomsCount'])
         property_data = property_details(smartyAutoAddress)
 
-        # if rc['residency'] == 'Residential':
+        # if room_count != 0:
         #     county_response = airtable_county_check(smartyAutoAddress, rc['county'])
         #     return county_response
         # response = {
@@ -251,39 +258,63 @@ def validate_address(smartyAutoAddress):
         }
         return response
 
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
 from pymongo.errors import ConnectionFailure
 
 # Replace placeholders with actual MongoDB Atlas credentials
-username = "easy-permit-user"
-password = "INCMhpgYDO9PQh4i"
-cluster_url = "easy-permit-db.9yxt1px.mongodb.net"
-database_name = "easy-permit-db"
+username = "admin"
+password = "pWXukZL9qbaoLbEG"
+cluster_url = "cluster0.ifa9hbf.mongodb.net"
+database_name = "ep-db"
 
-# Connection to MongoDB Atlas
-client = MongoClient(f"mongodb+srv://{username}:{password}@{cluster_url}/{database_name}?retryWrites=true&w=majority")
-db = client[database_name]
+def db_connection():
+    try:
+        # Create a MongoClient instance
+        # client = MongoClient(f"mongodb+srv://{username}:{password}@{cluster_url}/?retryWrites=true&w=majority")
+        uri = "mongodb+srv://admin:pWXukZL9qbaoLbEG@cluster0.ifa9hbf.mongodb.net/?retryWrites=true&w=majority"
+        # Create a new client and connect to the server
+        client = MongoClient(uri)
+        # Send a ping to confirm a successful connection
+        try:
+            client.admin.command('ping')
+            print("Pinged your deployment. You successfully connected to MongoDB!")
+        except Exception as e:
+            print("__________________________________________")
+            print(e)
+            print("__________________________________________")
 
+        print("Connection to MongoDB is successful.")
+        return client
+    except ConnectionFailure as e:
+        print(f"Error connecting to MongoDB: {e}")
 
 def save_property(property):
-    print("Property save: ", property)
+    # print("Property save: ", property)
     try:
+        db = db_connection()
+        # property_data = {
+        #     "climate_zone": property['climate_zone'],
+        #     "full_street_address": property['full_street_address'],
+        #     "unit": property['unit'],
+        #     "apn": property['apn'],
+        #     "owner": property['owner'],
+        #     "year_built": property['year_built'],
+        #     "square_feet": property['square_feet'],
+        #     "lot_size": property['lot_size'],
+        #     "bedrooms": property['bedrooms'],
+        #     "total_rooms": property['total_rooms'],
+        #     "project_extent": property['project_extent'],
+        #     "construction_worker": property['construction_worker']
+        # }
         property_data = {
-            "climate_zone": property['climate_zone'],
-            "full_street_address": property['full_street_address'],
-            "unit": property['unit'],
-            "apn": property['apn'],
-            "owner": property['owner'],
-            "year_built": property['year_built'],
-            "square_feet": property['square_feet'],
-            "lot_size": property['lot_size'],
-            "bedrooms": property['bedrooms'],
-            "total_rooms": property['total_rooms'],
-            "project_extent": property['project_extent'],
-            "construction_worker": property['construction_worker'],
+            'x': 'x',
+            'y': 'y'
         }
-
-        result = db.items.insert_one(property_data)
+        epproperty = db['property']
+        print("epproperty: ", epproperty)
+        result = epproperty.insert_one(property_data)
+        print("result: ", result)
+        # result = db.items.insert_one(property_data)
         response = {
             'data': {
                 "id": str(result.inserted_id),
