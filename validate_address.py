@@ -4,6 +4,7 @@ import os
 import json
 from pyairtable import Api
 from settings import AppSettings
+import database
 
 settings = AppSettings()
 
@@ -258,32 +259,10 @@ def validate_address(smartyAutoAddress):
         }
         return response
 
-from pymongo.mongo_client import MongoClient
-from pymongo.errors import ConnectionFailure
-
-def db_connection():
-    try:
-        uri = f"mongodb+srv://{settings.MONGODB_USERNAME}:{settings.MONGODB_PASSWORD}@{settings.MONGODB_CLUSTER_URL}/?retryWrites=true&w=majority"
-        client = MongoClient(uri)
-
-        try:
-            client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-        except Exception as e:
-            raise e
-        return client
-    except ConnectionFailure as e:
-        print(f"Error connecting to MongoDB: {e}")
 
 def save_property(property):
-
     try:
-        client = db_connection()
-        db = client[settings.MONGODB_DATABASE_NAME]
-        table_name = db[settings.MONGODB_TABLE_NAME]
-
-        result = table_name.insert_one(property)
-
+        result = database.table_name.insert_one(property)
         response = {
             'data': {
                 "id": str(result.inserted_id),
@@ -292,7 +271,7 @@ def save_property(property):
             },
         }
         return response
-    except ConnectionFailure as e:
+    except Exception as e:
         print("Error: ", e)
         response = {
             'data': {
