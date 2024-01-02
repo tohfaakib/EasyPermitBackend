@@ -36,4 +36,13 @@ def get_permit_validation(smartyAutoAddress: SmartyAutoAddress):
 
 @app.post("/api/property-save")
 def property(property: Property):
-    return save_property(property.model_dump())
+    try:
+        return save_property(property.model_dump())
+    except Exception as e:
+        response = {
+                'data': {
+                    'message': "Input Data Missing. Please check",
+                    'success': False
+                },
+            }
+        return response

@@ -4,9 +4,24 @@ import os
 import json
 from pyairtable import Api
 from settings import AppSettings
-import database
+from pymongo.mongo_client import MongoClient
+from pymongo.errors import ConnectionFailure
 
 settings = AppSettings()
+
+def db_connection():
+    try:
+        uri = f"mongodb+srv://{settings.MONGODB_USERNAME}:{settings.MONGODB_PASSWORD}@{settings.MONGODB_CLUSTER_URL}/?retryWrites=true&w=majority"
+        client = MongoClient(uri)
+
+        try:
+            client.admin.command('ping')
+            print("Pinged your deployment. You successfully connected to MongoDB!")
+        except Exception as e:
+            raise e
+        return client
+    except ConnectionFailure as e:
+        print(f"Error connecting to MongoDB: {e}")
 
 def get_usgeocoder_data(smartyAutoAddress):
     url = "https://usgeocoder.com/api/get_info.php"
@@ -202,17 +217,17 @@ def smarty_residency_county(smartyAutoAddress):
         res = response.json()
         
         try:
-            residency = res[0]['metadata']['rdi'] if res else None
+            # residency = res[0]['metadata']['rdi'] if res else None
             county_name = res[0]['metadata']['county_name'] if res else None
 
             data = {
-                "residency": residency,
+                # "residency": residency,
                 "county": county_name
             }
             return data
         except Exception as e:
             data = {
-                "residency": str(e),
+                # "residency": str(e),
                 "county": str(e)
             }
             return data
@@ -229,27 +244,29 @@ def validate_address(smartyAutoAddress):
         smarty_zipcode = smartyAutoAddress['zipcode']
         smarty_state = smartyAutoAddress['state']
         
-        # property_data = get_melissa_property_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}')
-        # room_count = int(property_data['Records'][0]['IntRoomInfo']['BathCount']) + int(property_data['Records'][0]['IntRoomInfo']['BedroomsCount']) + int(property_data['Records'][0]['IntRoomInfo']['RoomsCount'])
-        property_data = property_details(smartyAutoAddress)
+        property_data_room_count = get_melissa_property_data(f'{smarty_street}, {smarty_city}, {smarty_state} {smarty_zipcode}')
+        print("property_data: ", property_data_room_count)
+        room_count = int(property_data_room_count['Records'][0]['IntRoomInfo']['BathCount']) + int(property_data_room_count['Records'][0]['IntRoomInfo']['BedroomsCount']) + int(property_data_room_count['Records'][0]['IntRoomInfo']['RoomsCount'])
+        
+        # property_data = property_details(smartyAutoAddress)
 
-        # if room_count != 0:
-        #     county_response = airtable_county_check(smartyAutoAddress, rc['county'])
-        #     return county_response
-        # response = {
-        #     'data': {
-        #         'message': "Address is  not residential.",
-        #         'success': False
-        #     },
-        # }
-        # return response
-        return  {
+        if room_count != 0:
+            county_response = airtable_county_check(smartyAutoAddress, rc['county'])
+            return county_response
+        response = {
             'data': {
-                'data': property_data,
                 'message': "Address is  not residential.",
-                'success': True
+                'success': False
             },
         }
+        return response
+        # return  {
+        #     'data': {
+        #         'data': property_data,
+        #         'message': "Address is  not residential.",
+        #         'success': True
+        #     },
+        # }
     else:
         response = {
             'data': {
@@ -262,7 +279,11 @@ def validate_address(smartyAutoAddress):
 
 def save_property(property):
     try:
-        result = database.table_name.insert_one(property)
+        client = db_connection()
+        db = client[settings.MONGODB_DATABASE_NAME]
+        table_name = db[settings.MONGODB_TABLE_NAME]
+
+        result = table_name.insert_one(property)
         response = {
             'data': {
                 "id": str(result.inserted_id),
