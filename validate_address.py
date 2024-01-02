@@ -261,60 +261,29 @@ def validate_address(smartyAutoAddress):
 from pymongo.mongo_client import MongoClient
 from pymongo.errors import ConnectionFailure
 
-# Replace placeholders with actual MongoDB Atlas credentials
-username = "admin"
-password = "pWXukZL9qbaoLbEG"
-cluster_url = "cluster0.ifa9hbf.mongodb.net"
-database_name = "ep-db"
-
 def db_connection():
     try:
-        # Create a MongoClient instance
-        # client = MongoClient(f"mongodb+srv://{username}:{password}@{cluster_url}/?retryWrites=true&w=majority")
-        uri = "mongodb+srv://admin:pWXukZL9qbaoLbEG@cluster0.ifa9hbf.mongodb.net/?retryWrites=true&w=majority"
-        # Create a new client and connect to the server
+        uri = f"mongodb+srv://{settings.MONGODB_USERNAME}:{settings.MONGODB_PASSWORD}@{settings.MONGODB_CLUSTER_URL}/?retryWrites=true&w=majority"
         client = MongoClient(uri)
-        # Send a ping to confirm a successful connection
+
         try:
             client.admin.command('ping')
             print("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
-            print("__________________________________________")
-            print(e)
-            print("__________________________________________")
-
-        print("Connection to MongoDB is successful.")
+            raise e
         return client
     except ConnectionFailure as e:
         print(f"Error connecting to MongoDB: {e}")
 
 def save_property(property):
-    # print("Property save: ", property)
+
     try:
-        db = db_connection()
-        # property_data = {
-        #     "climate_zone": property['climate_zone'],
-        #     "full_street_address": property['full_street_address'],
-        #     "unit": property['unit'],
-        #     "apn": property['apn'],
-        #     "owner": property['owner'],
-        #     "year_built": property['year_built'],
-        #     "square_feet": property['square_feet'],
-        #     "lot_size": property['lot_size'],
-        #     "bedrooms": property['bedrooms'],
-        #     "total_rooms": property['total_rooms'],
-        #     "project_extent": property['project_extent'],
-        #     "construction_worker": property['construction_worker']
-        # }
-        property_data = {
-            'x': 'x',
-            'y': 'y'
-        }
-        epproperty = db['property']
-        print("epproperty: ", epproperty)
-        result = epproperty.insert_one(property_data)
-        print("result: ", result)
-        # result = db.items.insert_one(property_data)
+        client = db_connection()
+        db = client[settings.MONGODB_DATABASE_NAME]
+        table_name = db[settings.MONGODB_TABLE_NAME]
+
+        result = table_name.insert_one(property)
+
         response = {
             'data': {
                 "id": str(result.inserted_id),

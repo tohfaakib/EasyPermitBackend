@@ -11,6 +11,12 @@ class AppSettings(BaseSettings):
     GEOCODER_AUTH_KEY: str
     PROPERTY_MELISSADATA_ID: str
     ADDRESS_MELISSADATA_ID: str
+    MONGODB_USERNAME: str
+    MONGODB_PASSWORD: str
+    MONGODB_CLUSTER_URL: str
+    MONGODB_DATABASE_NAME: str
+    MONGODB_TABLE_NAME: str
+
 
     class Config:
         env_file = '.env'
