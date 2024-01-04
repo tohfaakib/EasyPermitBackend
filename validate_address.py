@@ -104,7 +104,7 @@ def property_details(smartyAutoAddress):
             "full_street_address": f'{smarty_street}, {smarty_city}, {smarty_state}, {smarty_zipcode}',
             "unit": 'unit',
             "apn": property_data['Records'][0]['Parcel']['UnformattedAPN'],
-            "owner": property_data['Records'][0]['PrimaryOwner']['Name1Full'],
+            "owner": property_data['Records'][0]['PrimaryOwner']['Name1Full'].upper(),
             "year_built": property_data['Records'][0]['PropertyUseInfo']['YearBuilt'],
             "square_feet": property_data['Records'][0]['PropertySize']['AreaBuilding'],
             "lot_size": property_data['Records'][0]['PropertySize']['AreaLotSF'],
@@ -138,6 +138,7 @@ def geocoder_municipality_status(smartyAutoAddress, filtered_airtable_cities):
             if municipal_name in filtered_airtable_cities:
                 response = {
                     'data': {
+                        'data': property_details(smartyAutoAddress),
                         'message': "Municipality Match Found and municipal_name(city) in airtable_cities",
                         'success': True
                     },
@@ -156,6 +157,7 @@ def geocoder_municipality_status(smartyAutoAddress, filtered_airtable_cities):
             if '-' in filtered_airtable_cities:
                 response = {
                     'data': {
+                        'data': property_details(smartyAutoAddress),
                         'message': "Municipality Un-incorporated and - in airtable_cities.",
                         'success': True
                     },
